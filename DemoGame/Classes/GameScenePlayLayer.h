@@ -2,23 +2,34 @@
 #define __GAMEPLAY_LAYER_H__
 
 #include "cocos2d.h"
+#include "Collision.h"
 
-class SneakyJoystick;
-class SneakyButton;
 
-class GameScenePlayLayer : public cocos2d::CCLayer
+class MonsterManager;
+class BulletManager;
+
+class GameScenePlayLayer :	public cocos2d::CCLayer, public CollisionListener
 {
 public:
+	GameScenePlayLayer();
+	~GameScenePlayLayer();
+
     // Here's a difference. Method 'init' in cocos2d-x returns bool, instead of returning 'id' in cocos2d-iphone
     virtual bool init();  
 
     // implement the "static node()" method manually
     LAYER_NODE_FUNC(GameScenePlayLayer);
 
+	// CollisionListener
+	virtual void CollisionDetected(Collidable *source, Collidable *target);
+
+
 private:
 
-	void TryParticle();
+	void AddParticle();
 	
+	MonsterManager *mMonsterManager;
+	BulletManager *mBulletManager;
 
 };
 

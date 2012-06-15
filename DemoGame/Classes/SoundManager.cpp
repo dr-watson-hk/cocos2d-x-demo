@@ -40,7 +40,10 @@ bool SoundManager::init()
     do 
     {
 		CocosDenshion::SimpleAudioEngine *audioEngine = CocosDenshion::SimpleAudioEngine::sharedEngine();
-		audioEngine->preloadBackgroundMusic("12thWarrior.mp3");
+		audioEngine->preloadBackgroundMusic("music.mp3");
+
+		audioEngine->preloadEffect("laser.wav");
+		audioEngine->preloadEffect("hit.wav");
 
         bRet = true;
 
@@ -64,7 +67,7 @@ SoundManager::~SoundManager()
 void SoundManager::PlayMusic()
 {
 	CocosDenshion::SimpleAudioEngine *audioEngine = CocosDenshion::SimpleAudioEngine::sharedEngine();
-	audioEngine->playBackgroundMusic("12thWarrior.mp3");
+	audioEngine->playBackgroundMusic("music.mp3", true);
 
 }
 	
@@ -75,3 +78,20 @@ void SoundManager::StopMusic()
 	audioEngine->stopBackgroundMusic();
 
 }
+
+
+void SoundManager::PlayLaserSFX()
+{
+	CocosDenshion::SimpleAudioEngine *audioEngine = CocosDenshion::SimpleAudioEngine::sharedEngine();
+	audioEngine->playEffect("laser.wav");
+
+}
+	
+
+void SoundManager::PlayHitSFX()
+{
+	CocosDenshion::SimpleAudioEngine *audioEngine = CocosDenshion::SimpleAudioEngine::sharedEngine();
+	audioEngine->playEffect("hit.wav");
+
+}
+

@@ -12,7 +12,9 @@ public:
 
 	enum SceneId
 	{
+		SCENE_MENU,
 		SCENE_PLAY,
+		SCENE_GAMEOVER
 	};
 
 	void runSceneWithId(SceneId id);

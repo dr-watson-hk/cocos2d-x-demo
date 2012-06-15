@@ -20,7 +20,7 @@ void System::Init()
 }
 
 
-CCPoint System::CCMakePoint(float x, float y)
+CCPoint System::PointMake(float x, float y)
 {
     
 #if (CC_TARGET_PLATFORM == CC_PLATFORM_IOS)
@@ -30,6 +30,17 @@ CCPoint System::CCMakePoint(float x, float y)
 #endif
         return ccp(x, y);
 
+}
+
+
+float System::GetRealSize(float size)
+{
+#if (CC_TARGET_PLATFORM == CC_PLATFORM_IOS)
+    if (mIsPad)
+        return size;
+    else 
+#endif
+        return size/2;
 }
 
 

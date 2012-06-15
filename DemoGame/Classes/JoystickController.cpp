@@ -19,7 +19,7 @@ JoystickController::~JoystickController()
 }
 
 
-JoystickController *JoystickController::joystickWithParentNode(CCNode *parent)
+JoystickController *JoystickController::controllerWithParentNode(CCNode *parent)
 {
 	JoystickController *controller = new JoystickController(); 
 	if (controller && controller->init(parent)) 
@@ -55,7 +55,7 @@ bool JoystickController::init(CCNode *parent)
 	
 		if (joystickBase)
 		{
-			joystickBase->setPosition(System::CCMakePoint(48, 48));
+			joystickBase->setPosition(System::PointMake(48, 48));
 
 			mJoystick = joystickBase->getJoystick();
 
@@ -68,13 +68,14 @@ bool JoystickController::init(CCNode *parent)
 		
 		if (buttonBase)
 		{
-			buttonBase->setPosition(System::CCMakePoint(480-48, 48));
+			buttonBase->setPosition(System::PointMake(480-48, 32));
 
 			mButton = buttonBase->getButton();	
 
 			parent->addChild(buttonBase);
 		}
 
+		mButtonDown = false;
 		
 		bRet = true;
 
@@ -87,12 +88,23 @@ bool JoystickController::init(CCNode *parent)
 
 void JoystickController::update(ccTime dt)
 {
-	
+
 	if (mListener)
 	{
-		CCPoint scaledV = ccpMult(mJoystick->getVelocity(), 480);
+		CCPoint scaledV = ccpMult(mJoystick->getVelocity(), 320);
 		
 		mListener->UpdatePosition(dt, scaledV.x, scaledV.y);
+
+		if (mButton->getIsActive())
+		{
+			if (!mButtonDown)
+			{
+				mButtonDown = true;
+				mListener->FirePrimary();
+			}
+		}
+		else
+			mButtonDown = false;
 
 	}
 

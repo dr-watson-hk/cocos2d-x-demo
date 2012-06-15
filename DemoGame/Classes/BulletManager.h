@@ -3,9 +3,30 @@
 
 #include "cocos2d.h"
 
+#include "Collision.h"
+
+
 using namespace cocos2d;
 
-class BulletManager : public CCNode
+#define MAX_BULLET			100
+
+class BulletListener
+{
+public:
+	virtual bool CollideWithBullet(Collidable *bullet) = 0;
+
+};
+
+
+class Shooter
+{
+public:
+	virtual void Shoot(const CCPoint &fromPosition) = 0;
+
+};
+
+
+class BulletManager : public CCNode, public Shooter
 {
 public:
 
@@ -16,9 +37,19 @@ public:
 	
 	bool init(CCSpriteBatchNode *spriteBatch);
 
+	virtual void update(ccTime dt);
+
+	void SetBulletListener(BulletListener *listener);
+
+	// Shooter
+	virtual void Shoot(const CCPoint &fromPosition);
 
 private:
 	
+	CCArray *mBulletList;
+	int mCurrentIndex;
+
+	BulletListener *mBulletListener;
 
 };
 

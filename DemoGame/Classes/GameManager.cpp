@@ -3,8 +3,13 @@
 
 #include "System.h"
 
+#include "SoundManager.h"
+
 #include "GameManager.h"
 #include "GameScene.h"
+#include "GameMenu.h"
+#include "GameOver.h"
+
 
 using namespace cocos2d;
 
@@ -81,10 +86,20 @@ void GameManager::runSceneWithId(SceneId id)
 
 	switch (id)
 	{
+	case SCENE_MENU:
+		SoundManager::sharedSoundManager()->StopMusic();
+		newScene = GameMenu::scene();
+		break;
+
 	case SCENE_PLAY:
+		SoundManager::sharedSoundManager()->PlayMusic();
 		newScene = GameScene::node();
 		break;
 
+	case SCENE_GAMEOVER:
+		newScene = GameOver::scene();
+		break;
+	
 	}
 
 	if (newScene)

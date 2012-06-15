@@ -6,11 +6,14 @@
 #include "SimpleAudioEngine.h"
 
 #include "Controller.h"
+#include "Collision.h"
 
 using namespace cocos2d;
 
+
 class Entity :	public CCNode, 
-				public ControllerListener
+				public ControllerListener,
+				public Collidable
 {
 public:
 	Entity();
@@ -21,14 +24,28 @@ public:
 	void SetVisual(CCSprite *sprite);
 	void SetController(Controller *controller);
 
-	virtual void UpdatePosition(float dt, float xDelta, float yDelta);
-	virtual void TriggerPrimary();
-	virtual void TriggerSecondary();
+	void SetRadius(float radius);
 
+	void SetPosition(const CCPoint &point);
+
+	void SetActive(bool flag);
+	bool IsActive();
+
+	// ControllerListener
+	virtual void UpdatePosition(float dt, float xDelta, float yDelta);
+	virtual void FirePrimary();
+	virtual void FireSecondary();
+
+	// Collidable
+	virtual bool CollidedWith(Collidable *target);
+	virtual const CCPoint& GetPosition();
+	virtual float GetRadius();
 
 private:
+	bool mActive;
 	CCSprite* mSprite;
-
+	float mRadius;
+	Controller *mController;
 
 };
 

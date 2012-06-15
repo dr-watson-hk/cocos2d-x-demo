@@ -17,7 +17,7 @@ public:
 	JoystickController();
 	~JoystickController();
 
-	static JoystickController *joystickWithParentNode(CCNode *parent);
+	static JoystickController *controllerWithParentNode(CCNode *parent);
 
 	bool init(CCNode *parent);
 
@@ -27,6 +27,8 @@ private:
 
 	SneakyJoystick *mJoystick;
 	SneakyButton *mButton;
+
+	bool mButtonDown;
 
 };
 

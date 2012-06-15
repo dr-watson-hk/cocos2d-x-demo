@@ -13,6 +13,20 @@ public:
 
     // implement the "static node()" method manually
     LAYER_NODE_FUNC(GameSceneBgLayer);
+
+	virtual void update(ccTime dt);
+
+private:
+
+	CCSprite* mBg1;
+	CCSprite* mBg2;
+
+	float mX1;
+	float mX2;
+	float mSpeed;
+
+
+
 };
 
 #endif  // __BG_LAYER_H__

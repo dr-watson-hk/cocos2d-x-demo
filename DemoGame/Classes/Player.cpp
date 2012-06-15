@@ -1,12 +1,20 @@
 #include "System.h"
 
 #include "Player.h"
+
+#if (CC_TARGET_PLATFORM == CC_PLATFORM_WIN32)
+#include "KeyboardController.h"
+#else
 #include "JoystickController.h"
+#endif
+
+#include "BulletManager.h"
 
 
 Player::Player()
+	: mShooter(NULL)
 {
-	mHeart = NULL;
+	
 
 }
 
@@ -56,7 +64,7 @@ bool Player::init(CCSpriteBatchNode *spriteBatch)
 		CCSprite *sprite = CCSprite::spriteWithSpriteFrameName("beetleship.png");
 		CC_BREAK_IF (!sprite);
 
-		sprite->setPosition(System::CCMakePoint(240, 160));
+		sprite->setPosition(System::PointMake(80, 160));
 		spriteBatch->addChild(sprite);
 
 		SetVisual(sprite);
@@ -64,19 +72,18 @@ bool Player::init(CCSpriteBatchNode *spriteBatch)
 		//////////////////////////////////////////////////////////////////////////
 		// add control component
 		//
-		JoystickController *joystick = JoystickController::joystickWithParentNode(parent);
-		CC_BREAK_IF (!joystick);
 
-		SetController(joystick);
+#if (CC_TARGET_PLATFORM == CC_PLATFORM_WIN32)
+		KeyboardController *controller = KeyboardController::controllerWithParentNode(parent);
+#else
+		JoystickController *controller = JoystickController::controllerWithParentNode(parent);
+#endif
 
-		//////////////////////////////////////////////////////////////////////////
-		// add an extra image
-		//
-		mHeart = CCSprite::spriteWithSpriteFrameName("healthheart.png");
-		mHeart->setPosition(System::CCMakePoint(240+100, 160+50));
-		mHeart->setIsVisible(false);
-		
-		spriteBatch->addChild(mHeart); 
+		CC_BREAK_IF (!controller);
+
+		SetController(controller);
+
+		SetRadius(System::GetRealSize(50));
 
 		bRet = true;
 
@@ -85,3 +92,37 @@ bool Player::init(CCSpriteBatchNode *spriteBatch)
     return bRet;
 }
 
+
+void Player::UpdatePosition(float dt, float xDelta, float yDelta)
+{
+	Entity::UpdatePosition(dt, xDelta, yDelta);
+
+	CCPoint pos = GetPosition();
+
+	pos = ccpClamp(pos, System::PointMake(0,0), System::PointMake(480, 320));
+
+	SetPosition(pos);
+
+}
+
+
+void Player::FirePrimary()
+{
+	if (mShooter)
+	{
+		CCPoint pos = GetPosition();
+
+		pos.x += System::GetRealSize(100);
+
+		mShooter->Shoot(pos);
+
+	}
+
+}
+
+
+void Player::SetShooter(Shooter *shooter)
+{
+	mShooter = shooter;
+
+}

@@ -7,6 +7,9 @@
 
 using namespace cocos2d;
 
+class Shooter;
+
+
 class Player : public Entity
 {
 public:
@@ -17,9 +20,13 @@ public:
 
 	bool init(CCSpriteBatchNode *spriteBatch);
 
-private:
-	CCSprite *mHeart;
+	virtual void UpdatePosition(float dt, float xDelta, float yDelta);
+	virtual void FirePrimary();
 
+	void SetShooter(Shooter *shooter);
+
+private:
+	Shooter *mShooter;
 };
 
-#endif  // __PLAYER_H__
+#endif

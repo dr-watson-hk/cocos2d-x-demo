@@ -3,18 +3,35 @@
 #include "GameScenePlayLayer.h"
 
 #include "Player.h"
+#include "Monster.h"
+#include "MonsterManager.h"
+#include "GameManager.h"
+#include "BulletManager.h"
+#include "Constants.h"
+
 
 using namespace cocos2d;
 
+GameScenePlayLayer::GameScenePlayLayer()
+	: mMonsterManager(NULL)
+{
+}
 
-void GameScenePlayLayer::TryParticle()
+GameScenePlayLayer::~GameScenePlayLayer()
+{
+	
+
+}
+
+
+void GameScenePlayLayer::AddParticle()
 {
 
 	CCParticleSystemQuad *m_emitter = new CCParticleSystemQuad();
-	m_emitter->initWithTotalParticles(80);
+	m_emitter->initWithTotalParticles(20);
 	m_emitter->autorelease();
 
-	this->addChild(m_emitter, 10);
+	this->addChild(m_emitter, 10, TAB_PARTICLE);
 
 	CCSpriteFrameCache *cache = CCSpriteFrameCache::sharedSpriteFrameCache();
 	CCSpriteFrame *frame = cache->spriteFrameByName("star.png");
@@ -23,11 +40,10 @@ void GameScenePlayLayer::TryParticle()
 
 	m_emitter->setEmitterMode(kCCParticleModeGravity);
 	m_emitter->setTextureWithRect(texture, rect);
-
-	//m_emitter->setTexture(CCTextureCache::sharedTextureCache()->addImage("fire.png"));
 	
 	// duration
-	m_emitter->setDuration(kParticleDurationInfinity);
+	//m_emitter->setDuration(kParticleDurationInfinity);
+	m_emitter->setDuration(0.50f);
 	
 	// gravity
 	m_emitter->setGravity(CCPointZero);
@@ -53,8 +69,8 @@ void GameScenePlayLayer::TryParticle()
 	m_emitter->setPosVar(CCPointZero);
 	
 	// life of particles
-	m_emitter->setLife(3);
-	m_emitter->setLifeVar(1);
+	m_emitter->setLife(0.3f);
+	m_emitter->setLifeVar(0.2f);
 
 	// spin of particles
 	m_emitter->setStartSpin(0);
@@ -86,6 +102,7 @@ void GameScenePlayLayer::TryParticle()
 	// additive
 	m_emitter->setIsBlendAdditive(true);
 
+	m_emitter->stopSystem();
 
 }
 
@@ -102,14 +119,27 @@ bool GameScenePlayLayer::init()
 
         CC_BREAK_IF(! CCLayer::init());
 
-		CCTexture2D *texture = CCTextureCache::sharedTextureCache()->textureForKey("images.png");
+		CCTexture2D *texture = CCTextureCache::sharedTextureCache()->textureForKey("images-hd.png");
         CCSpriteBatchNode *spriteBatch = CCSpriteBatchNode::batchNodeWithTexture(texture);
         addChild(spriteBatch);
 
 		Player *player = Player::playerWithBatchNode(spriteBatch);
 		addChild(player);
 
-		TryParticle();
+		mMonsterManager = MonsterManager::initWithBatchNode(spriteBatch);
+		mMonsterManager->SetCollisionListener(this);
+		mMonsterManager->SetAttackingTarget(player);
+
+		addChild(mMonsterManager);
+
+		mBulletManager = BulletManager::initWithBatchNode(spriteBatch);
+		mBulletManager->SetBulletListener(mMonsterManager);
+
+		addChild(mBulletManager);
+
+		player->SetShooter(mBulletManager);
+
+		AddParticle();
 
 
         bRet = true;
@@ -118,6 +148,15 @@ bool GameScenePlayLayer::init()
 
     return bRet;
 }
+
+
+void GameScenePlayLayer::CollisionDetected(Collidable *source, Collidable *target)
+{
+	
+	GameManager::sharedGameManager()->runSceneWithId(GameManager::SCENE_GAMEOVER);
+	
+}
+
 
 
 

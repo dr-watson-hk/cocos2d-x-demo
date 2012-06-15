@@ -10,8 +10,8 @@ class ControllerListener
 {
 public:
 	virtual void UpdatePosition(float dt, float xDelta, float yDelta) = 0;
-	virtual void TriggerPrimary() = 0;
-	virtual void TriggerSecondary() = 0;
+	virtual void FirePrimary() = 0;
+	virtual void FireSecondary() = 0;
 
 };
 

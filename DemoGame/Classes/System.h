@@ -11,8 +11,9 @@ class System
 public:
     static void Init();
     static bool IsPad();
-    static CCPoint CCMakePoint(float x, float y);
-    
+    static CCPoint PointMake(float x, float y);
+    static float GetRealSize(float size);
+
 private:
     static bool mIsPad;
     

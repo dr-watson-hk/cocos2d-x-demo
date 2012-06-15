@@ -11,6 +11,9 @@ public:
 	void PlayMusic();
 	void StopMusic();
 
+	void PlayLaserSFX();
+	void PlayHitSFX();
+
 protected:
 	SoundManager();
 	~SoundManager();
